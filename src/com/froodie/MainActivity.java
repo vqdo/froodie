@@ -14,11 +14,11 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Parse.initialize(this, "tsLX6wJX2RBrRKjnmIrMxe5BG3gbevOpg2mnK6Po", "4Ww6Vbn3pLgVhzkYYBGWcFtD5KkBfqZ9XBpzWSsC");
-		ParseObject testObject = new ParseObject("TestObject");
-		testObject.put("foo", "bar");
-		testObject.saveInBackground();
+		ParseManager pm = new ParseManager();
+		pm.initialize(this);
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -26,5 +26,7 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
+	
+	
 
 }
