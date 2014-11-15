@@ -53,16 +53,8 @@ public class LocationUpdateService extends Service implements LocationListener
 			
 	        @Override
 	        public void done(List<ParseObject> objects, com.parse.ParseException e) {
-	            if (e == null) {
-	            	for(int i = 0; i < objects.size(); i++) {
-	            		//navigate to the first one via google maps
-//	            		String uri = String.format(Locale.ENGLISH, "geo:%f,%f", objects.get(i).get("latitude"), objects.get(i).get("longitude"));
-//	            		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
-//	            		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//	            		startActivity(intent);
-		            	System.out.println("TOOTSIE RETRIEVED OBJ LAT: " + objects.get(i).get("latitude") + " LONG: " + objects.get(i).get("longitude"));
-	            	}
-
+	            if (e == null && objects.size() >= 1) {
+	            	makeNotification();
 	            } else {
 	                Log.d("App", "Error: " + e.getMessage());
 	            }
@@ -78,8 +70,8 @@ public class LocationUpdateService extends Service implements LocationListener
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
 		.setSmallIcon(R.drawable.pizza)
-		.setContentTitle("ALERT!")
-		.setContentText("Frood Nearby")
+		.setContentTitle("Froodie:")
+		.setContentText("Free Food Nearby")
 		.setAutoCancel(true);
 	Intent baseIntent = new Intent(this, MainActivity.class);
 	TaskStackBuilder stack_builder = TaskStackBuilder.create(this);

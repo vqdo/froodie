@@ -1,11 +1,14 @@
 package com.froodie;
 
 
+import java.util.Locale;
+
 import com.froodie.db.ParseEvent;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -171,8 +174,12 @@ public class MainActivity extends Activity {
 	}
 	
 	@JavascriptInterface
-	public void onEventClick(String objectId) {
-		// do something
+	public void onEventClick(double latitude, double longitude) {
+		//navigate to the first one via google maps
+		System.out.println("LAT: " + latitude + ", LONG: " + longitude);
+		String uri = String.format(Locale.ENGLISH, "geo:%f,%f", latitude, longitude);
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+		localContext.startActivity(intent);
 	}	
 }		
 }
