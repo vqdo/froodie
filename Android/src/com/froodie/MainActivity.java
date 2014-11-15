@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -109,8 +110,8 @@ public class MainActivity extends Activity {
 		event.setFood(food);
 		event.setLatitude(loc.getLatitude());
 		event.setLongitude(loc.getLongitude());	
+		Toast toast = Toast.makeText(this, "Name: " + event.getName() + "\nLocation " + event.getLocation() + "\nDescription: " + event.getDescription() + "\nFood: " + event.getFood() + "\nLAT: " + event.getLatitude() + "\nLONG " + event.getLongitude(), Toast.LENGTH_SHORT);
+		toast.show();
 		return event;
-		//Toast toast = Toast.makeText(this, "Name: " + event.getName() + "\nLocation " + event.getLocation() + "\nDescription: " + event.getDescription() + "\nFood: " + event.getFood() + "\nLAT: " + event.getLatitude() + "\nLONG " + event.getLongitude(), Toast.LENGTH_SHORT);
-		//toast.show();
 	}
 }

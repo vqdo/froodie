@@ -1,5 +1,8 @@
 package com.froodie;
 
+import java.util.List;
+
+import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
@@ -12,9 +15,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.ParseException;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
+import android.widget.Toast;
 
 public class LocationUpdateService extends Service implements LocationListener
 {	
@@ -22,7 +28,7 @@ public class LocationUpdateService extends Service implements LocationListener
 	private int notificationId = 0;
 	private final int TIME_SENSITIVITY = 30000; // milliseconds
 	private final int DISTANCE_SENSITIVITY = -1;  // meters. if negative, then distance is not used, only the time.
-	private final float RADIUS = 0.005;
+	private final double RADIUS = 0.005;
 	
 	@Override
 	public IBinder onBind(Intent arg0)
@@ -32,23 +38,30 @@ public class LocationUpdateService extends Service implements LocationListener
 	
 	@Override
 	public void onLocationChanged(Location currentLoc)
-	{			System.out.println("TOOTSIE! locaParseObjectd");
-	
-	ParseQuery<ParseObject> query = ParseQuery.getQuery("GameScore");
-	query.whereLessThan("latitude", currentLoc.getLatitude() + RADIUS);
-	query.whereGreaterThan("latitude", currentLoc.getLatitude() - RADIUS);
-	query.whereLessThan("longitude", currentLoc.getLatitude() + RADIUS);
-	query.whereGreaterThan("longitude", currentLoc.getLatitude() - RADIUS);
-	query.findInBackground(new FindCallback<ParseObject>() {
-	    public void done(List<ParseObject> scoreList, ParseException e) {
-	        if (e == null) {
-	            Log.d("score", "Retrieved " + scoreList.size() + " scores");
-	        } else {
-	            Log.d("score", "Error: " + e.getMessage());
+	{			
+		System.out.println("TOOTSIE! locaParseObjectd");
+		System.out.println("TOOTSIE! CURR LAT:" + currentLoc.getLatitude() + " LONG:" + currentLoc.getLongitude());
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("Event");
+		query.whereLessThan("latitude", currentLoc.getLatitude() + RADIUS);
+		query.whereGreaterThan("latitude", currentLoc.getLatitude() - RADIUS);
+		query.whereLessThan("longitude", currentLoc.getLongitude() + RADIUS);
+		query.whereGreaterThan("longitude", currentLoc.getLongitude() - RADIUS);
+		query.findInBackground(new FindCallback<ParseObject>() {
+			
+	        @Override
+	        public void done(List<ParseObject> objects, com.parse.ParseException e) {
+	            if (e == null) {
+	            	for(int i = 0; i < objects.size(); i++) {
+		            	System.out.println("TOOTSIE RETRIEVED OBJ LAT: " + objects.get(i).get("latitude") + " LONG: " + objects.get(i).get("longitude"));
+	            	}
+
+	            } else {
+	                Log.d("App", "Error: " + e.getMessage());
+	            }
 	        }
-	    }
-	});
-	
+
+	    });
+	}
 	// Creates a notification and displays it on System tray 
 	void makeNotification() {
 		System.out.println("TOOTSIE! making notif nbd");
