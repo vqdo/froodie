@@ -1,6 +1,7 @@
 package com.froodie;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.parse.FindCallback;
 import com.parse.ParseObject;
@@ -17,6 +18,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ParseException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -53,6 +55,11 @@ public class LocationUpdateService extends Service implements LocationListener
 	        public void done(List<ParseObject> objects, com.parse.ParseException e) {
 	            if (e == null) {
 	            	for(int i = 0; i < objects.size(); i++) {
+	            		//navigate to the first one via google maps
+//	            		String uri = String.format(Locale.ENGLISH, "geo:%f,%f", objects.get(i).get("latitude"), objects.get(i).get("longitude"));
+//	            		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+//	            		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//	            		startActivity(intent);
 		            	System.out.println("TOOTSIE RETRIEVED OBJ LAT: " + objects.get(i).get("latitude") + " LONG: " + objects.get(i).get("longitude"));
 	            	}
 
@@ -70,7 +77,7 @@ public class LocationUpdateService extends Service implements LocationListener
 		System.out.println("TOOTSIE! making notif nbd");
 
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-		.setSmallIcon(R.drawable.ic_launcher)
+		.setSmallIcon(R.drawable.pizza)
 		.setContentTitle("ALERT!")
 		.setContentText("Frood Nearby")
 		.setAutoCancel(true);

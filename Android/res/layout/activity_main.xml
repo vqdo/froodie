@@ -11,7 +11,7 @@
         android:layout_height="80dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:background="#F58B00"
+        android:background="#333333"
         android:text="FREE FOOD SPOTTED!" 
         android:textColor= "#FFFFFF"
         android:textStyle="bold"
