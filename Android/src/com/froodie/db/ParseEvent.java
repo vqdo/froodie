@@ -1,5 +1,7 @@
 package com.froodie.db;
 
+import com.parse.ParseObject;
+
 public class ParseEvent {
 	double latitude;
 	double longitude; 
@@ -89,6 +91,16 @@ public class ParseEvent {
 		this.numDislikes = numDislikes;
 	}
 	
+	public ParseObject toParseObject() {
+		ParseObject obj = new ParseObject("Event");
+		obj.put("name", getName());
+		obj.put("location", getLocation());
+		obj.put("description", getDescription());
+		obj.put("food", getFood());
+		obj.put("latitude", getLatitude());
+		obj.put("longitude", getLongitude());
+		return obj;
+	}
 	
 
 }
