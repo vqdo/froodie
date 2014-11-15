@@ -7,26 +7,32 @@ import com.parse.ParseObject;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.webkit.JavascriptInterface;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.GeolocationPermissions;
 
 
 public class MainActivity extends Activity {
 
 	Context localContext;
 	LocationFinder finder;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,16 +52,46 @@ public class MainActivity extends Activity {
 		startService(intent);
 	}
 	
+	@SuppressLint("NewApi")
 	private void initializeWebview() {
 		WebView webView = (WebView) findViewById(R.id.events_webview);
-		webView.setWebViewClient(new WebViewClient());		
+		webView.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onPageFinished(WebView view, String url) {
+			    super.onPageFinished(view, url);
+			    view.clearCache(true);
+			}				
+		});		
+		webView.setWebChromeClient(new WebChromeClient() {
+			
+			@Override
+			public void onConsoleMessage(String message, int lineNumber, String sourceID) {
+			    Log.d("MyApplication", message + " -- From line "
+			                         + lineNumber + " of "
+			                         + sourceID);
+			  }
+			
+			@Override
+			public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+				super.onGeolocationPermissionsShowPrompt(origin, callback);
+				callback.invoke(origin, true, false);
+			}		
+		});
 
 		WebSettings settings = webView.getSettings();
 		settings.setJavaScriptEnabled(true);
 		settings.setGeolocationEnabled(true);
+		settings.setAllowUniversalAccessFromFileURLs(true);
+		settings.setAllowFileAccessFromFileURLs(true);
+		settings.setAllowContentAccess(true);
+		settings.setJavaScriptCanOpenWindowsAutomatically(true);
+		settings.setDomStorageEnabled(true);		
 		
-		webView.loadUrl("http://victoriado.com/froodie");
-						
+		webView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);		
+		webView.addJavascriptInterface(new FroodieWebInterface(this), "Froodie");		
+		
+		//webView.loadUrl("file:///android_asset/index.html");
+		webView.loadUrl("http://victoriado.com/froodie/index.html");
 	}
 	
 	
@@ -66,7 +102,7 @@ public class MainActivity extends Activity {
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-	
+
 	public void promptForFoodInfo() {
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			
@@ -110,8 +146,27 @@ public class MainActivity extends Activity {
 		event.setFood(food);
 		event.setLatitude(loc.getLatitude());
 		event.setLongitude(loc.getLongitude());	
-		Toast toast = Toast.makeText(this, "Name: " + event.getName() + "\nLocation " + event.getLocation() + "\nDescription: " + event.getDescription() + "\nFood: " + event.getFood() + "\nLAT: " + event.getLatitude() + "\nLONG " + event.getLongitude(), Toast.LENGTH_SHORT);
-		toast.show();
-		return event;
+//		Toast toast = Toast.makeText(this, "Name: " + event.getName() + "\nLocation " + event.getLocation() + "\nDescription: " + event.getDescription() + "\nFood: " + event.getFood() + "\nLAT: " + event.getLatitude() + "\nLONG " + event.getLongitude(), Toast.LENGTH_SHORT);
+//		toast.show();
+		return event;		
 	}
+	
+	
+	public class FroodieWebInterface {
+	Context mContext;
+	
+	/** Instantiate the interface and set the context */
+	FroodieWebInterface(Context c) {
+	    mContext = c;
+	}
+	
+	/** Show a toast from the web page */
+	@JavascriptInterface
+	public String getPosition() {
+		Location loc = LocationFinder.getInstance().getCurrentLocation(localContext);
+		System.out.println(loc);
+		return "{ latitude: " + loc.getLatitude() 
+				+ ", longitude: " + loc.getLongitude() + "}";
+	}
+}		
 }

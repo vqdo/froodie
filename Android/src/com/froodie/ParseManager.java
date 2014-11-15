@@ -11,4 +11,5 @@ public class ParseManager {
 	public void initialize(Context context) {
 		Parse.initialize(context, appId, clientId);		
 	}
+	
 }

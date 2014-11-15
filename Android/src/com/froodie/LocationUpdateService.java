@@ -6,6 +6,7 @@ import com.parse.FindCallback;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -62,7 +63,9 @@ public class LocationUpdateService extends Service implements LocationListener
 
 	    });
 	}
+	
 	// Creates a notification and displays it on System tray 
+	@SuppressLint("NewApi")
 	void makeNotification() {
 		System.out.println("TOOTSIE! making notif nbd");
 

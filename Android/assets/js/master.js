@@ -28,10 +28,25 @@ var froodie = (function() {
 		// 		//instance.displayListItems(cachedData);
 		// 	}
 		// }
-
+		
+		instance.initializeParse();	
+		instance.watchPosition();
 		if ("geolocation" in navigator) {
-			instance.initializeParse();	
 			$('.status').html("Loading...");			
+			
+		} else {
+			$('.status').append("Location detection is not enabled for your device.")
+		}		
+	}
+
+	instance.watchPosition = function() {
+		if(window.Froodie) {
+			lastLocation = JSON.parse(Froodie.getPosition()); 
+			console.log(lastLocation);
+		  	//$('.status').html("Latitude: " + lastLocation.latitude);
+		  	instance.getListItems();			
+
+		} else {
 			navigator.geolocation.watchPosition(
 				function(position) {
 				  	lastLocation = {
@@ -46,9 +61,7 @@ var froodie = (function() {
 				}
 
 			);			
-		} else {
-			$('.status').append("Location detection is not enabled for your device.")
-		}		
+		}	
 	}
 
 	instance.initializeParse = function() {
@@ -84,17 +97,15 @@ var froodie = (function() {
 			//.startsWith('name', "huh")
 			.find({
 				success: function(result) {
-					// if(instance.hasLocalStorageSupport()) {	
-					// 	localStorage['events'] = JSON.stringify(result);
-					// }	
-					console.log("Got result!");
+					if(instance.hasLocalStorageSupport()) {	
+						localStorage['events'] = JSON.stringify(result);
+					}	
 					instance.displayListItems(result);
 				}
 			});
 	}
 
 	instance.displayListItems = function(result) {
-		console.log("Displaying list items");
 		var ul = $('.events-list');
 		ul.empty();
 
@@ -142,8 +153,6 @@ var froodie = (function() {
 		    return false;
 		  }		
 	}
-
-	
 
 	return instance;
 
