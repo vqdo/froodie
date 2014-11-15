@@ -17,6 +17,7 @@ var froodie = (function() {
 	}
 
 	var lastLocation = null;
+	var lastCount = 0;
 
 	instance.p_event = null;
 
@@ -30,8 +31,7 @@ var froodie = (function() {
 		// }
 
 		if ("geolocation" in navigator) {
-			instance.initializeParse();	
-			$('.status').html("Loading...");			
+			instance.initializeParse();			
 			navigator.geolocation.watchPosition(
 				function(position) {
 				  	lastLocation = {
@@ -49,17 +49,23 @@ var froodie = (function() {
 		} else {
 			$('.status').append("Location detection is not enabled for your device.")
 		}		
+
+		setInterval(function() {
+			instance.getListItems();
+		}, 3000);
 	}
 
 	instance.handleEventClick = function() {
-		if(window.Foodie) {
-
-			$('.event-list-item').click(function(e) {
-				var info = $(this).data('info');
-				Foodie.onEventClick(info.latitude, info.longitude);
-			});
-		}
+		$('.event-list-item').click(function(e) {
+			//$('body').css('background-color', 'white');
+			//console.log($(this).data('latitude'));
+			//var info = $(this).data('info');
+			if(window.Froodie) {				
+				Froodie.onEventClick($(this).data('latitude'), $(this).data('longitude'));
+			}
+		});
 	}
+	
 
 	instance.initializeParse = function() {
 		Parse.initialize(APP_ID, JS_KEY);
@@ -91,6 +97,7 @@ var froodie = (function() {
 			 .greaterThan('latitude', range.latitude[0])
 			 .lessThan('longitude', range.longitude[1])
 			 .greaterThan('latitude', range.latitude[0])
+			 .descending('createdAt')
 			//.startsWith('name', "huh")
 			.find({
 				success: function(result) {
@@ -107,10 +114,11 @@ var froodie = (function() {
 		console.log(result);
 		var ul = $('.events-list');
 		ul.empty();
-//+ lastSpotted + ' hours ago
+
 		$.each(result, function(i, evt) {
 			var item = $('<li />').addClass('event-list-item');
-			$(item).data("info", evt);
+			$(item).data("latitude", evt.attributes.latitude);
+			$(item).data("longitude", evt.attributes.longitude);
 
 			var lastSpotted = instance.getLastSpotted(evt.createdAt || (evt.attributes && evt.createdAt));
 
@@ -135,7 +143,8 @@ var froodie = (function() {
 				+ (evt.description || (evt.attributes && evt.attributes.description) || "") + "</span>");
 			item.append(description);	
 
-			ul.append(item);
+			item.appendTo(ul);
+			
 		});
 
 		instance.handleEventClick();

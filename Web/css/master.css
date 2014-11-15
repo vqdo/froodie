@@ -9,6 +9,11 @@ ul, li {
 	margin: 0;
 	padding: 0;
 }
+.status img {
+	display: block;
+	margin: auto;
+	width: 100px;
+}
 .container {
 	width: 600px;
 	margin: auto;
@@ -22,6 +27,12 @@ ul, li {
 	display: block;
 	margin: 10px 0;
 	width: 100%;
+}
+.event-list-item:active {
+	border: 1px solid #037889;
+}
+.event-list-item:active .event-name  {
+	background: #037889;
 }
 .event-list-item div {
 	padding: 5px;
@@ -74,5 +85,8 @@ ul, li {
 @media (max-width: 800px) {
 	.container {
 		width: 100%;
+	}
+	h1 {
+		display: none;
 	}
 }
