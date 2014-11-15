@@ -18,7 +18,7 @@ ul, li {
 	width: 100%;
 }
 .event-list-item {
-	border: 1px solid #e34813;
+	border: 1px solid #06a4bb;
 	display: block;
 	margin: 10px 0;
 	width: 100%;
@@ -26,16 +26,29 @@ ul, li {
 .event-list-item div {
 	padding: 5px;
 }
-.event-name {
-	background: #e34813;
-	color: #FFF;
-}
 .event-label {
+	color: #444;
 	display: inline-block;
 	float: left;
-	width: 180px;
+	width: 160px;
 	text-transform: uppercase;
-	letter-spacing: 2px;
+}
+.event-value {
+	color: #333;
+	letter-spacing: 1px;
+}
+.event-name {
+	background: #06a4bb;		
+}
+.event-name .event-label {
+	color: #FFF;
+	letter-spacing: 1px;
+}
+.event-timestamp {
+	float: right;
+	color: #eee;
+	font-style: italic;
+	font-size: 14px;
 }
 
 
