@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 				super.onGeolocationPermissionsShowPrompt(origin, callback);
 				callback.invoke(origin, true, false);
 			}		
+		
 		});
 
 		WebSettings settings = webView.getSettings();
@@ -168,5 +169,10 @@ public class MainActivity extends Activity {
 		return "{ latitude: " + loc.getLatitude() 
 				+ ", longitude: " + loc.getLongitude() + "}";
 	}
+	
+	@JavascriptInterface
+	public void onEventClick(String objectId) {
+		// do something
+	}	
 }		
 }

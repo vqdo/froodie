@@ -38,7 +38,7 @@ var froodie = (function() {
 				  		latitude: position.coords.latitude, 
 				  		longitude: position.coords.longitude
 				  	};
-				  	$('.status').html(lastLocation.latitude);
+				  	$('.status').empty();
 				  	instance.getListItems();
 				}, 
 				function(err) {
@@ -49,6 +49,16 @@ var froodie = (function() {
 		} else {
 			$('.status').append("Location detection is not enabled for your device.")
 		}		
+	}
+
+	instance.handleEventClick = function() {
+		if(window.Foodie) {
+
+			$('.event-list-item').click(function(e) {
+				var info = $(this).data('info');
+				Foodie.onEventClick(info.latitude, info.longitude);
+			});
+		}
 	}
 
 	instance.initializeParse = function() {
@@ -94,16 +104,20 @@ var froodie = (function() {
 	}
 
 	instance.displayListItems = function(result) {
-		console.log("Displaying list items");
+		console.log(result);
 		var ul = $('.events-list');
 		ul.empty();
-
+//+ lastSpotted + ' hours ago
 		$.each(result, function(i, evt) {
 			var item = $('<li />').addClass('event-list-item');
+			$(item).data("info", evt);
+
+			var lastSpotted = instance.getLastSpotted(evt.createdAt || (evt.attributes && evt.createdAt));
 
 			var name = $('<div />').addClass('event-name cf').html(
-				'<strong class="event-label">Name</strong> <span class="event-value">' 
-				+ (evt.name || (evt.attributes && evt.attributes.name) || "") + "</span>");
+				'<strong class="event-label">' 
+				+ (evt.name || (evt.attributes && evt.attributes.name) || '&nbsp;') + '</strong>');
+			name.append($('<span/>').addClass('event-timestamp').html(lastSpotted + " hour(s) ago"));
 			item.append(name);
 
 			var loc = $('<div />').addClass('event-location cf').html(
@@ -123,6 +137,8 @@ var froodie = (function() {
 
 			ul.append(item);
 		});
+
+		instance.handleEventClick();
 	}
 
 	instance.getCoordinateRange = function(radius) {
@@ -143,7 +159,12 @@ var froodie = (function() {
 		  }		
 	}
 
-	
+	instance.getLastSpotted = function(time) {
+		var now = new Date();
+		var diff = new Date(Date.parse(time));
+		var hours =  now.getHours() - diff.getHours();
+		return hours;
+	}
 
 	return instance;
 
