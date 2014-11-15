@@ -4,6 +4,7 @@ package com.froodie;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
+
 import android.location.Location;
 import android.os.Bundle;
 import android.app.Activity;
@@ -15,6 +16,14 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.net.Uri;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 
 public class MainActivity extends Activity {
@@ -34,6 +43,22 @@ public class MainActivity extends Activity {
 		localContext = this;
 		ParseManager pm = new ParseManager();
 		pm.initialize(this);
+		
+		initializeWebview();
+		
+		
+	}
+	
+	private void initializeWebview() {
+		WebView webView = (WebView) findViewById(R.id.events_webview);
+		webView.setWebViewClient(new WebViewClient());		
+
+		WebSettings settings = webView.getSettings();
+		settings.setJavaScriptEnabled(true);
+		settings.setGeolocationEnabled(true);
+		
+		webView.loadUrl("http://victoriado.com/froodie");
+						
 	}
 	
 	

@@ -7,15 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity" >    
-    
-    <ListView
-        android:id="@+id/event_list"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_above="@+id/report_food_button"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true" />
+    tools:context=".MainActivity" >
 
     <Button
         android:id="@+id/report_food_button"
@@ -24,5 +16,12 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:text="Free Food Spotted!" />
+
+    <WebView
+        android:id="@+id/events_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/report_food_button"
+        android:layout_alignLeft="@+id/report_food_button"/>
 
 </RelativeLayout>
